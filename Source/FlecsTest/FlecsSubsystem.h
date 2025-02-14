@@ -5,6 +5,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "FlecsSubsystem.generated.h"
 
+// Components
 struct FlecsTransform
 {
 	FTransform Value;
@@ -23,6 +24,7 @@ struct FlecsCorn
 };
 struct Corns {};
 
+// Some sort of wrapper for entities
 USTRUCT(BlueprintType)
 struct FFlecsEntityHandle
 {
@@ -44,13 +46,15 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	flecs::world* GetEcsWorld() const;
-	
+
+	// This is the asset for the corn?
 	UPROPERTY(EditAnywhere)
 	UInstancedStaticMeshComponent* CornRenderer = nullptr;
 
-	
+	// Add systems and components
 	UFUNCTION(BlueprintCallable, Category="FLECS")
 	void InitFlecs(UStaticMesh* InMesh);
+	
 	UFUNCTION(BlueprintCallable, Category="FLECS")
 	FFlecsEntityHandle SpawnCornEntity(FVector location, FRotator rotation);
 	UFUNCTION(BlueprintCallable, Category="FLECS")

@@ -2,11 +2,11 @@
 flecs::world* UFlecsSubsystem::GetEcsWorld() const{return ECSWorld;}
 void UFlecsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	OnTickDelegate = FTickerDelegate::CreateUObject(this, &UFlecsSubsystem::Tick);
+	/*OnTickDelegate = FTickerDelegate::CreateUObject(this, &UFlecsSubsystem::Tick);
 	OnTickHandle = FTSTicker::GetCoreTicker().AddTicker(OnTickDelegate);
 	
 	//sets title in Flecs Explorer
-  char name[] = { "Minimum Viable Flecs" };
+	char name[] = { "Minimum Viable Flecs" };
 	char* argv = name;
 	ECSWorld = new flecs::world(1, &argv);
 	
@@ -20,12 +20,13 @@ void UFlecsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	GetEcsWorld()->component<FlecsCorn>().member<float>("Current Growth");
 	GetEcsWorld()->component<FlecsISMIndex>().member<int>("ISM Render index");	
 	
-	UE_LOG(LogTemp, Warning, TEXT("UUnrealFlecsSubsystem has started!"));
+	UE_LOG(LogTemp, Warning, TEXT("UUnrealFlecsSubsystem has started!"));*/
 	Super::Initialize(Collection);
 }
 
 void UFlecsSubsystem::InitFlecs(UStaticMesh* InMesh)
 {
+	/*
 	//Spawn an actor and add an Instanced Static Mesh component to it.
 	//This will render our entities.
 	FActorSpawnParameters SpawnInfo;
@@ -58,11 +59,12 @@ void UFlecsSubsystem::InitFlecs(UStaticMesh* InMesh)
 	});
 	
 	UE_LOG(LogTemp, Warning, TEXT("Flecs Corn system initialized!"));
+*/
 }
 
 void UFlecsSubsystem::Deinitialize()
 {
-	FTSTicker::GetCoreTicker().RemoveTicker(OnTickHandle);
+	/*FTSTicker::GetCoreTicker().RemoveTicker(OnTickHandle);
 	
 	if (ECSWorld)
 	{
@@ -71,9 +73,12 @@ void UFlecsSubsystem::Deinitialize()
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("UUnrealFlecsSubsystem has shut down!"));
-	Super::Deinitialize();
+	Super::Deinitialize();*/
 }
 
+// These seems to be setters and getters for getting specific component values -- obviously does not have to be a system
+
+// Adding an entity
 FFlecsEntityHandle UFlecsSubsystem::SpawnCornEntity(FVector location, FRotator rotation)
 {
 	auto IsmID = CornRenderer->AddInstance(FTransform(rotation, location));
@@ -86,11 +91,14 @@ FFlecsEntityHandle UFlecsSubsystem::SpawnCornEntity(FVector location, FRotator r
 	return FFlecsEntityHandle{int(entity.id())};
 }
 
+// Entity handle seems to be the container to allow the developer to access its components
 void UFlecsSubsystem::SetEntityHighlight(FFlecsEntityHandle entityHandle, bool isHighlighted)
 {
 	int idx = GetEcsWorld()->entity(entityHandle.FlecsEntityId).get<FlecsISMIndex>()->Value;
 	CornRenderer->SetCustomDataValue(idx, 1, (float)isHighlighted, true);
 }
+
+//
 float UFlecsSubsystem::GetEntityGrowthData(FFlecsEntityHandle entityHandle)
 {
 	return GetEcsWorld()->entity(entityHandle.FlecsEntityId).get<FlecsCorn>()->Growth;
@@ -98,6 +106,7 @@ float UFlecsSubsystem::GetEntityGrowthData(FFlecsEntityHandle entityHandle)
 
 bool UFlecsSubsystem::Tick(float DeltaTime)
 {
-	if(ECSWorld) ECSWorld->progress(DeltaTime);
+	/*if(ECSWorld) ECSWorld->progress(DeltaTime);
+	return true;*/
 	return true;
 }
