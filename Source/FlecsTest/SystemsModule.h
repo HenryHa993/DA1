@@ -16,7 +16,4 @@ class FLECSTEST_API USystemsModule : public UUnrealFlecsModuleBase
 
 public:
 	virtual void Initialise(flecs::world& ecs) override;
-
-private:
-	flecs::system testSys;
 };

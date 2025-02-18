@@ -5,5 +5,5 @@
 
 void UComponentsModule::Initialise(flecs::world& ecs)
 {
-	ecs.component<Transform>();
+	// Flecs has automatic registration, so no longer need to specifically register components.
 }

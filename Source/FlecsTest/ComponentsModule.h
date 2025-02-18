@@ -6,10 +6,24 @@
 #include "UnrealFlecsModuleBase.h"
 #include "ComponentsModule.generated.h"
 
+// Components
 struct Transform
 {
 	FTransform Value;
 };
+
+struct LocalTransform
+{
+	FTransform Value;
+};
+
+struct ActorPtr
+{
+	AActor* Value;
+};
+
+// Tags
+struct UpDownMove{};
 
 /**
  * 
