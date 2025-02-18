@@ -2,3 +2,8 @@
 
 
 #include "ComponentsModule.h"
+
+void UComponentsModule::Initialise(flecs::world& ecs)
+{
+	ecs.component<Transform>();
+}

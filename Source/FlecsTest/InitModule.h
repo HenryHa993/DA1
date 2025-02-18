@@ -13,4 +13,7 @@ UCLASS()
 class FLECSTEST_API UInitModule : public UUnrealFlecsModuleBase
 {
 	GENERATED_BODY()
+
+public:
+	virtual void Initialise(flecs::world& ecs) override;
 };

@@ -7,9 +7,11 @@ void UUnrealFlecsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	OnTickDelegate = FTickerDelegate::CreateUObject(this, &UUnrealFlecsSubsystem::Tick);
 	OnTickHandle = FTSTicker::GetCoreTicker().AddTicker(OnTickDelegate);
+
+	ECSWorld = new flecs::world();
 	
 	//sets title in Flecs Explorer
-	/*char name[] = { "Minimum Viable Flecs" };
+	/*char name[] = { "Game Design and Analytics" };
 	char* argv = name;
 	ECSWorld = new flecs::world(1, &argv);*/
 	
@@ -45,6 +47,7 @@ flecs::world* UUnrealFlecsSubsystem::GetEcsWorld() const
 	return ECSWorld;
 }
 
+// Runs systems registered to pipeline
 bool UUnrealFlecsSubsystem::Tick(float DeltaTime)
 {
 	if(ECSWorld) ECSWorld->progress(DeltaTime);

@@ -6,6 +6,11 @@
 #include "UnrealFlecsModuleBase.h"
 #include "ComponentsModule.generated.h"
 
+struct Transform
+{
+	FTransform Value;
+};
+
 /**
  * 
  */
@@ -13,4 +18,7 @@ UCLASS()
 class FLECSTEST_API UComponentsModule : public UUnrealFlecsModuleBase
 {
 	GENERATED_BODY()
+
+public:
+	virtual void Initialise(flecs::world& ecs) override;
 };
