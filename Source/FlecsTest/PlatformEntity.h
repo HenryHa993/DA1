@@ -3,23 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "EntityBase.generated.h"
+#include "Public/EntityBase.h"
+#include "PlatformEntity.generated.h"
 
 UCLASS()
-class FLECSTEST_API AEntityBase : public AActor
+class FLECSTEST_API APlatformEntity : public AEntityBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AEntityBase();
+	APlatformEntity();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Initialise() override;
 };

@@ -7,6 +7,16 @@
 #include "ComponentsModule.generated.h"
 
 // Components
+struct OwningActor
+{
+	AActor* Value;
+};
+
+struct Pivot
+{
+	FVector Value;
+};
+
 struct Transform
 {
 	FTransform Value;
@@ -17,13 +27,8 @@ struct LocalTransform
 	FTransform Value;
 };
 
-struct ActorPtr
-{
-	AActor* Value;
-};
-
 // Tags
-struct UpDownMove{};
+struct VerticalOscillator{};
 
 /**
  * 
