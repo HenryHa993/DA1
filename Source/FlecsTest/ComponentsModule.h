@@ -30,6 +30,8 @@ struct LocalTransform
 // Tags
 struct VerticalOscillator{};
 
+struct HorizontalOscillator{};
+
 /**
  * 
  */

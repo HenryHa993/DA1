@@ -31,10 +31,25 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		{
 			float elapsedTime = it.world().get_info()->world_time_total;
 			float sinValue = FMath::Sin(elapsedTime);
-			FVector newLocation = pivot.Value;
-			newLocation.Z += sinValue * 100.0f;
+			float z = pivot.Value.Z;
+			z += sinValue * 100.0f;
+			FVector newLocation = transform.Value.GetLocation();
+			newLocation.Z = z;
 			transform.Value.SetLocation(newLocation);
 		});
+
+	ecs.system<Pivot, Transform>("Horizontal Oscillator System")
+	.with<HorizontalOscillator>()
+	.each([](flecs::iter& it,size_t,  Pivot& pivot, Transform& transform)
+	{
+		float elapsedTime = it.world().get_info()->world_time_total;
+		float sinValue = FMath::Sin(elapsedTime);
+		float x = pivot.Value.X;
+		x += sinValue * 100.0f;
+		FVector newLocation = transform.Value.GetLocation();
+		newLocation.X = x;
+		transform.Value.SetLocation(newLocation);
+	});
 	
 	// Update transform of actor
 	ecs.system<OwningActor, Transform>("Copy Transform System")
