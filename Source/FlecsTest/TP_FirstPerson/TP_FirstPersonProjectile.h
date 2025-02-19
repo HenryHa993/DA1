@@ -9,6 +9,15 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 
+UENUM(BlueprintType)
+enum class EProjectileComponent : uint8
+{
+	ResetComponent,
+	XOscillatorComponent,
+	YOscillatorComponent,
+	ZOscillatorComponent
+};
+
 UCLASS(config=Game)
 class ATP_FirstPersonProjectile : public AActor
 {
@@ -21,6 +30,13 @@ class ATP_FirstPersonProjectile : public AActor
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ProjectileMechanic)
+	TArray<UMaterial*> PaintMaterials;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ProjectileMechanic)
+	EProjectileComponent ProjectileComponent;
 
 public:
 	ATP_FirstPersonProjectile();

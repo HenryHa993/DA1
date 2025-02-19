@@ -35,12 +35,45 @@ ATP_FirstPersonProjectile::ATP_FirstPersonProjectile()
 void ATP_FirstPersonProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
-	if(OtherActor != nullptr)
+	if(OtherActor != nullptr && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		AEntityBase* entity = Cast<AEntityBase>(OtherActor);
-		if(entity == nullptr) return;
+		AEntityBase* entityBase = Cast<AEntityBase>(OtherActor);
+		if(entityBase == nullptr) return;
 
-		entity->AddComponent<VerticalOscillator>();
+		flecs::entity entity = entityBase->GetEntity();
+
+		// Add component based on projectile
+		// This does not work for some reason.
+		switch(ProjectileComponent)
+		{
+		case EProjectileComponent::ResetComponent:
+			entity.remove<XOscillator>();
+			entity.remove<YOscillator>();
+			entity.remove<ZOscillator>();
+			break;
+		case EProjectileComponent::XOscillatorComponent:
+			entity.add<XOscillator>();
+			break;
+		case EProjectileComponent::YOscillatorComponent:
+			entity.add<YOscillator>();
+			break;
+		case EProjectileComponent::ZOscillatorComponent:
+			entity.add<ZOscillator>();
+			break;
+		}
+
+		// If all three components given, remove all
+		if(entity.has<XOscillator>() && entity.has<YOscillator>() && entity.has<ZOscillator>())
+		{
+			entity.remove<XOscillator>();
+			entity.remove<YOscillator>();
+			entity.remove<ZOscillator>();
+		}
+
+		// Set colour
+		entity.add<SetColour>();
+		
+		Destroy();
 	}
 	/*if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{

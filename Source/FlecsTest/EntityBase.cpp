@@ -29,3 +29,8 @@ void AEntityBase::BeginPlay()
 void AEntityBase::Initialise()
 {
 }
+
+flecs::entity AEntityBase::GetEntity()
+{
+	return Entity;
+}

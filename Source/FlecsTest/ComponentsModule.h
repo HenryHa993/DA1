@@ -27,10 +27,24 @@ struct LocalTransform
 	FTransform Value;
 };
 
-// Tags
-struct VerticalOscillator{};
+struct StaticMeshComponent
+{
+	UStaticMeshComponent* Value;
+};
 
-struct HorizontalOscillator{};
+struct PaintColours
+{
+	TArray<UMaterialInstance*> Value;
+};
+
+// Tags
+struct ZOscillator{};
+
+struct XOscillator{};
+
+struct YOscillator{};
+
+struct SetColour{};
 
 /**
  * 
