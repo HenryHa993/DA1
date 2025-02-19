@@ -24,6 +24,5 @@ void APlatformEntity::Initialise()
 		.set<Pivot>({GetActorLocation()})
 		.set<Transform>({GetActorTransform()})
 		.set<LocalTransform>({FTransform::Identity})
-		.add<VerticalOscillator>()
 		.add<HorizontalOscillator>();
 }

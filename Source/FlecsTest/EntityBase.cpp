@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "FlecsTest/Public/EntityBase.h"
+#include "EntityBase.h"
 
 #include "UnrealFlecsSubsystem.h"
 #include "Kismet/GameplayStatics.h"

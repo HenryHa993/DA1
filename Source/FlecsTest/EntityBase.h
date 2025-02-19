@@ -41,8 +41,18 @@ protected:
 	virtual void Initialise();
 
 public:
+	template <typename T>
+	void AddComponent(T value = T());
+
+public:
 	flecs::entity Entity;
 
 protected:
 	flecs::world* ecs;
 };
+
+template <typename T>
+void AEntityBase::AddComponent(T value)
+{
+	Entity.set<T>(value);
+}

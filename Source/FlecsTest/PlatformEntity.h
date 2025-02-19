@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Public/EntityBase.h"
+#include "EntityBase.h"
 #include "PlatformEntity.generated.h"
 
 UCLASS()
