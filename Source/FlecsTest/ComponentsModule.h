@@ -12,9 +12,9 @@ struct OwningActor
 	AActor* Value;
 };
 
-struct Pivot
+struct StaticMeshComponent
 {
-	FVector Value;
+	UStaticMeshComponent* Value;
 };
 
 struct Transform
@@ -27,9 +27,9 @@ struct LocalTransform
 	FTransform Value;
 };
 
-struct StaticMeshComponent
+struct Timer
 {
-	UStaticMeshComponent* Value;
+	float Value;
 };
 
 struct PaintColours

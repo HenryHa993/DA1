@@ -8,22 +8,19 @@
 
 void USystemsModule::Initialise(flecs::world& ecs)
 {
-	// If you do not want it registered to a timeline, set kind(0)
-	/*flecs::system testSys = ecs.system<Transform>("Test System")
-		.each([](Transform& t)
+	// Update timer
+	ecs.system<Timer>("Timer System")
+		.kind(flecs::PreUpdate)
+		.with<XOscillator>().oper(flecs::Or)
+		.with<YOscillator>().oper(flecs::Or)
+		.with<ZOscillator>()
+		.each([](flecs::iter& it,size_t, Timer& timer)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Transform %s"), *t.Value.ToString());
-		});*/
+			timer.Value += it.delta_time();
+			UE_LOG(LogTemp, Warning, TEXT("Timer: %f"), timer.Value);
+		});
 
-	/*ecs.system<Transform>("Test Movement System")
-.each([](flecs::iter& it, size_t, Transform& transform)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Movement system called"));
-	FVector translationPoint = transform.Value.GetLocation();
-	translationPoint.Z += 100.0f * it.delta_time();
-	transform.Value.SetLocation(translationPoint);
-});*/
-
+	
 	// Colour
 	ecs.system<StaticMeshComponent, PaintColours>("Blank Colour System")
 		.kind(flecs::OnUpdate)
@@ -32,9 +29,9 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.without<YOscillator>()
 		.without<ZOscillator>()
 		.each([](StaticMeshComponent& mesh, PaintColours& colours)
-	{
-		mesh.Value->SetMaterial(0, colours.Value[0]);
-	});
+		{
+			mesh.Value->SetMaterial(0, colours.Value[0]);
+		});
 
 	ecs.system<StaticMeshComponent, PaintColours>("Red Colour System")
 		.kind(flecs::OnUpdate)
@@ -43,9 +40,9 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.without<YOscillator>()
 		.without<ZOscillator>()
 		.each([](StaticMeshComponent& mesh,  PaintColours& colours)
-	{
-		mesh.Value->SetMaterial(0, colours.Value[1]);
-	});
+		{
+			mesh.Value->SetMaterial(0, colours.Value[1]);
+		});
 
 	ecs.system<StaticMeshComponent, PaintColours>("Green Colour System")
 		.kind(flecs::OnUpdate)
@@ -54,9 +51,9 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.without<XOscillator>()
 		.without<ZOscillator>()
 		.each([](StaticMeshComponent& mesh, PaintColours& colours)
-	{
-		mesh.Value->SetMaterial(0, colours.Value[2]);
-	});
+		{
+			mesh.Value->SetMaterial(0, colours.Value[2]);
+		});
 
 	ecs.system<StaticMeshComponent, PaintColours>("Blue Colour System")
 		.kind(flecs::OnUpdate)
@@ -65,9 +62,9 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.without<XOscillator>()
 		.without<YOscillator>()
 		.each([](StaticMeshComponent& mesh, PaintColours& colours)
-	{
-		mesh.Value->SetMaterial(0, colours.Value[3]);
-	});
+		{
+			mesh.Value->SetMaterial(0, colours.Value[3]);
+		});
 
 	ecs.system<StaticMeshComponent, PaintColours>("Yellow Colour System")
 		.kind(flecs::OnUpdate)
@@ -76,9 +73,9 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.with<YOscillator>()
 		.without<ZOscillator>()
 		.each([](StaticMeshComponent& mesh, PaintColours& colours)
-	{
-		mesh.Value->SetMaterial(0, colours.Value[4]);
-	});
+		{
+			mesh.Value->SetMaterial(0, colours.Value[4]);
+		});
 
 	ecs.system<StaticMeshComponent, PaintColours>("Purple Colour System")
 		.kind(flecs::OnUpdate)
@@ -87,9 +84,9 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.with<ZOscillator>()
 		.without<YOscillator>()
 		.each([](StaticMeshComponent& mesh, PaintColours& colours)
-	{
-		mesh.Value->SetMaterial(0, colours.Value[5]);
-	});
+		{
+			mesh.Value->SetMaterial(0, colours.Value[5]);
+		});
 
 	ecs.system<StaticMeshComponent, PaintColours>("Cyan Colour System")
 		.kind(flecs::OnUpdate)
@@ -98,69 +95,74 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.with<ZOscillator>()
 		.without<XOscillator>()
 		.each([](StaticMeshComponent& mesh, PaintColours& colours)
-	{
-		mesh.Value->SetMaterial(0, colours.Value[6]);
-	});
+		{
+			mesh.Value->SetMaterial(0, colours.Value[6]);
+		});
 
 	ecs.system<>("Reset Colour System")
 		.kind(flecs::PostUpdate)
 		.with<SetColour>()
 		.each([](flecs::iter& it, size_t t)
-	{
-		flecs::entity entity = it.entity(t);
-		entity.remove<SetColour>();
-	});
-	
-	//
-	ecs.system<Pivot, Transform>("Z Oscillator System")
-		.kind(flecs::OnUpdate)
-		.with<ZOscillator>()
-		.each([](flecs::iter& it,size_t,  Pivot& pivot, Transform& transform)
 		{
-			float elapsedTime = it.world().get_info()->world_time_total;
-			float sinValue = FMath::Sin(elapsedTime * 0.75f);
-			float z = pivot.Value.Z;
-			z += sinValue * 100.0f;
-			FVector newLocation = transform.Value.GetLocation();
-			newLocation.Z = z;
-			transform.Value.SetLocation(newLocation);
+			flecs::entity entity = it.entity(t);
+			entity.remove<SetColour>();
 		});
-
-	ecs.system<Pivot, Transform>("X Oscillator System")
+	
+	// Oscillators
+	ecs.system<Timer, LocalTransform>("X Oscillator System")
 		.kind(flecs::OnUpdate)
 		.with<XOscillator>()
-		.each([](flecs::iter& it,size_t,  Pivot& pivot, Transform& transform)
+		.each([](Timer& timer, LocalTransform& localTransform)
 	{
-		float elapsedTime = it.world().get_info()->world_time_total;
-		float sinValue = FMath::Sin(elapsedTime * 0.75f);
-		float x = pivot.Value.X;
-		x += sinValue * 100.0f;
-		FVector newLocation = transform.Value.GetLocation();
+		float sinValue = FMath::Sin(timer.Value * 0.75f);
+		float x = sinValue * 100.0f;
+		FVector newLocation = localTransform.Value.GetLocation();
 		newLocation.X = x;
-		transform.Value.SetLocation(newLocation);
+		localTransform.Value.SetLocation(newLocation);
 	});
 
-	ecs.system<Pivot, Transform>("Y Oscillator System")
+	ecs.system<Timer, LocalTransform>("Y Oscillator System")
 		.kind(flecs::OnUpdate)
 		.with<YOscillator>()
-		.each([](flecs::iter& it,size_t,  Pivot& pivot, Transform& transform)
+		.each([](Timer& timer, LocalTransform& localTransform)
 		{
-			float elapsedTime = it.world().get_info()->world_time_total;
-			float sinValue = FMath::Sin(elapsedTime * 0.75f);
-			float y = pivot.Value.Y;
-			y += sinValue * 100.0f;
-			FVector newLocation = transform.Value.GetLocation();
+			float sinValue = FMath::Sin(timer.Value * 0.75f);
+			float y = sinValue * 100.0f;
+			FVector newLocation = localTransform.Value.GetLocation();
 			newLocation.Y = y;
-			transform.Value.SetLocation(newLocation);
+			localTransform.Value.SetLocation(newLocation);
+		});
+
+	ecs.system<Timer, LocalTransform>("Z Oscillator System")
+		.kind(flecs::OnUpdate)
+		.with<ZOscillator>()
+		.each([](Timer& timer, LocalTransform& localTransform)
+		{
+			float sinValue = FMath::Sin(timer.Value * 0.75f);
+			float z = sinValue * 100.0f;
+			FVector newLocation = localTransform.Value.GetLocation();
+			newLocation.Z = z;
+			localTransform.Value.SetLocation(newLocation);
 		});
 	
 	// Update transform of actor
-	ecs.system<OwningActor, Transform>("Copy Transform System")
+	// I don't think I will use this one just yet
+	/*ecs.system<OwningActor, Transform>("Copy Transform System")
 		.kind(flecs::PostUpdate)
 		.each([](flecs::iter& it, size_t, OwningActor& actor,  const Transform& transform)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Transform system called"));
 			FVector lerpLocation = FMath::Lerp(actor.Value->GetActorLocation(), transform.Value.GetLocation(), it.delta_time());
 			actor.Value->SetActorTransform(transform.Value);
+		});*/
+
+	ecs.system<StaticMeshComponent, LocalTransform>("Copy Local Transform System")
+		.kind(flecs::PostUpdate)
+		.each([](flecs::iter& it, size_t, StaticMeshComponent& mesh,  const LocalTransform& localTransform)
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Transform system called"));
+			FTransform blendedTransform;
+			blendedTransform.Blend(mesh.Value->GetRelativeTransform(), localTransform.Value, it.delta_time() * 2);
+			mesh.Value->SetRelativeTransform(blendedTransform);
 		});
 }

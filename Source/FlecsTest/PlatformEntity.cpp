@@ -25,8 +25,9 @@ void APlatformEntity::BeginPlay()
 void APlatformEntity::Initialise()
 {
 	Entity.set<OwningActor>({this})
-		.set<Pivot>({PivotPoint})
+		.set<Timer>({0})
 		.set<Transform>({GetActorTransform()})
+		.set<LocalTransform>({FTransform::Identity})
 		.set<StaticMeshComponent>({StaticMesh})
 		.set<PaintColours>({Colours});
 }
