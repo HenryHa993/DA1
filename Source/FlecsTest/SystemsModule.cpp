@@ -118,7 +118,7 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.each([](flecs::iter& it,size_t,  Pivot& pivot, Transform& transform)
 		{
 			float elapsedTime = it.world().get_info()->world_time_total;
-			float sinValue = FMath::Sin(elapsedTime);
+			float sinValue = FMath::Sin(elapsedTime * 0.75f);
 			float z = pivot.Value.Z;
 			z += sinValue * 100.0f;
 			FVector newLocation = transform.Value.GetLocation();
@@ -132,7 +132,7 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.each([](flecs::iter& it,size_t,  Pivot& pivot, Transform& transform)
 	{
 		float elapsedTime = it.world().get_info()->world_time_total;
-		float sinValue = FMath::Sin(elapsedTime);
+		float sinValue = FMath::Sin(elapsedTime * 0.75f);
 		float x = pivot.Value.X;
 		x += sinValue * 100.0f;
 		FVector newLocation = transform.Value.GetLocation();
@@ -146,7 +146,7 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.each([](flecs::iter& it,size_t,  Pivot& pivot, Transform& transform)
 		{
 			float elapsedTime = it.world().get_info()->world_time_total;
-			float sinValue = FMath::Sin(elapsedTime);
+			float sinValue = FMath::Sin(elapsedTime * 0.75f);
 			float y = pivot.Value.Y;
 			y += sinValue * 100.0f;
 			FVector newLocation = transform.Value.GetLocation();
@@ -160,7 +160,7 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.each([](flecs::iter& it, size_t, OwningActor& actor,  const Transform& transform)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Transform system called"));
-			FVector lerpLocation = FMath::Lerp(actor.Value->GetActorLocation(), transform.Value.GetLocation(), it.delta_time() * 0.5f);
+			FVector lerpLocation = FMath::Lerp(actor.Value->GetActorLocation(), transform.Value.GetLocation(), it.delta_time());
 			actor.Value->SetActorTransform(transform.Value);
 		});
 }

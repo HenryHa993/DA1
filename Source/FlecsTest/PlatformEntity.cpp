@@ -9,21 +9,23 @@ APlatformEntity::APlatformEntity()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("UStaticMeshComponent");
-	RootComponent = StaticMesh;
+	SceneRoot = CreateDefaultSubobject<USceneComponent>("Root");
+	RootComponent = SceneRoot;
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
+	StaticMesh->SetupAttachment(SceneRoot);
 }
 
 // Called when the game starts or when spawned
 void APlatformEntity::BeginPlay()
 {
+	PivotPoint = GetActorLocation();
 	Super::BeginPlay();
-	
 }
 
 void APlatformEntity::Initialise()
 {
 	Entity.set<OwningActor>({this})
-		.set<Pivot>({GetActorLocation()})
+		.set<Pivot>({PivotPoint})
 		.set<Transform>({GetActorTransform()})
 		.set<StaticMeshComponent>({StaticMesh})
 		.set<PaintColours>({Colours});

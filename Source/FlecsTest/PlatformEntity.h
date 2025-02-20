@@ -21,9 +21,16 @@ protected:
 	virtual void Initialise() override;
 
 public:
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USceneComponent* SceneRoot;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UMaterialInstance*> Colours;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector PivotPoint;
 };
