@@ -6,6 +6,15 @@
 #include "EntityBase.h"
 #include "PlatformEntity.generated.h"
 
+UENUM(BlueprintType)
+enum class EOscillationType : uint8
+{
+	None,
+	Red,
+	Green,
+	Blue
+};
+
 UCLASS()
 class FLECSTEST_API APlatformEntity : public AEntityBase
 {
@@ -32,5 +41,11 @@ public:
 	TArray<UMaterialInstance*> Colours;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector PivotPoint;
+	TArray<EOscillationType> Oscillations;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Speed = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Distance = 100;
 };

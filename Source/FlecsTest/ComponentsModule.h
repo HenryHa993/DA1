@@ -32,6 +32,16 @@ struct Timer
 	float Value;
 };
 
+struct OscillationSpeed
+{
+	float Value;
+};
+
+struct OscillationDistance
+{
+	float Value;
+};
+
 struct PaintColours
 {
 	TArray<UMaterialInstance*> Value;

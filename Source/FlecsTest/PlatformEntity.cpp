@@ -18,7 +18,6 @@ APlatformEntity::APlatformEntity()
 // Called when the game starts or when spawned
 void APlatformEntity::BeginPlay()
 {
-	PivotPoint = GetActorLocation();
 	Super::BeginPlay();
 }
 
@@ -27,7 +26,27 @@ void APlatformEntity::Initialise()
 	Entity.set<OwningActor>({this})
 		.set<Timer>({0})
 		.set<Transform>({GetActorTransform()})
-		.set<LocalTransform>({FTransform::Identity})
+		.set<LocalTransform>({StaticMesh->GetRelativeTransform()})
 		.set<StaticMeshComponent>({StaticMesh})
+		.set<OscillationSpeed>({Speed})
+		.set<OscillationDistance>({Distance})
 		.set<PaintColours>({Colours});
+
+	for(EOscillationType type : Oscillations)
+	{
+		switch (type)
+		{
+		case EOscillationType::None:
+			break;
+		case EOscillationType::Red:
+			Entity.add<XOscillator>();
+			break;
+		case EOscillationType::Green:
+			Entity.add<YOscillator>();
+			break;
+		case EOscillationType::Blue:
+			Entity.add<ZOscillator>();
+			break;
+		}
+	}
 }

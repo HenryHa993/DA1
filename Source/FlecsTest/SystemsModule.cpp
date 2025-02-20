@@ -14,10 +14,10 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		.with<XOscillator>().oper(flecs::Or)
 		.with<YOscillator>().oper(flecs::Or)
 		.with<ZOscillator>()
-		.each([](flecs::iter& it,size_t, Timer& timer)
+		.each([](flecs::iter& it,size_t index, Timer& timer)
 		{
 			timer.Value += it.delta_time();
-			UE_LOG(LogTemp, Warning, TEXT("Timer: %f"), timer.Value);
+			//UE_LOG(LogTemp, Warning, TEXT("Timer: %f"), timer.Value);
 		});
 
 	
@@ -109,37 +109,37 @@ void USystemsModule::Initialise(flecs::world& ecs)
 		});
 	
 	// Oscillators
-	ecs.system<Timer, LocalTransform>("X Oscillator System")
+	ecs.system<Timer, LocalTransform, OscillationSpeed, OscillationDistance>("X Oscillator System")
 		.kind(flecs::OnUpdate)
 		.with<XOscillator>()
-		.each([](Timer& timer, LocalTransform& localTransform)
+		.each([](Timer& timer, LocalTransform& localTransform, OscillationSpeed& speed, OscillationDistance& distance)
 	{
-		float sinValue = FMath::Sin(timer.Value * 0.75f);
-		float x = sinValue * 100.0f;
+		float sinValue = FMath::Sin(timer.Value * speed.Value);
+		float x = sinValue * distance.Value;
 		FVector newLocation = localTransform.Value.GetLocation();
 		newLocation.X = x;
 		localTransform.Value.SetLocation(newLocation);
 	});
 
-	ecs.system<Timer, LocalTransform>("Y Oscillator System")
+	ecs.system<Timer, LocalTransform, OscillationSpeed, OscillationDistance>("Y Oscillator System")
 		.kind(flecs::OnUpdate)
 		.with<YOscillator>()
-		.each([](Timer& timer, LocalTransform& localTransform)
+		.each([](Timer& timer, LocalTransform& localTransform, OscillationSpeed& speed, OscillationDistance& distance)
 		{
-			float sinValue = FMath::Sin(timer.Value * 0.75f);
-			float y = sinValue * 100.0f;
+			float sinValue = FMath::Sin(timer.Value * speed.Value);
+			float y = sinValue * distance.Value;
 			FVector newLocation = localTransform.Value.GetLocation();
 			newLocation.Y = y;
 			localTransform.Value.SetLocation(newLocation);
 		});
 
-	ecs.system<Timer, LocalTransform>("Z Oscillator System")
+	ecs.system<Timer, LocalTransform, OscillationSpeed, OscillationDistance>("Z Oscillator System")
 		.kind(flecs::OnUpdate)
 		.with<ZOscillator>()
-		.each([](Timer& timer, LocalTransform& localTransform)
+		.each([](Timer& timer, LocalTransform& localTransform, OscillationSpeed& speed, OscillationDistance& distance)
 		{
-			float sinValue = FMath::Sin(timer.Value * 0.75f);
-			float z = sinValue * 100.0f;
+			float sinValue = FMath::Sin(timer.Value * speed.Value);
+			float z = sinValue * distance.Value;
 			FVector newLocation = localTransform.Value.GetLocation();
 			newLocation.Z = z;
 			localTransform.Value.SetLocation(newLocation);

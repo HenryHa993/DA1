@@ -37,7 +37,7 @@ void UUnrealFlecsSubsystem::Deinitialize()
 		delete ECSWorld;
 		ECSWorld = nullptr;
 	}
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("UUnrealFlecsSubsystem has shut down!"));
 	Super::Deinitialize();
 }
@@ -50,6 +50,6 @@ flecs::world* UUnrealFlecsSubsystem::GetEcsWorld() const
 // Runs systems registered to pipeline
 bool UUnrealFlecsSubsystem::Tick(float DeltaTime)
 {
-	if(ECSWorld) ECSWorld->progress(DeltaTime);
+	if(ECSWorld != nullptr) ECSWorld->progress(DeltaTime);
 	return true;
 }
